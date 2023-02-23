@@ -4,11 +4,18 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 
 
 //Create Product -- Admin
-exports.createProduct = ca
+exports.createProduct = catchAsyncErrors(async(req,res,next)=>{
+    const product = await Product.create(req.body);
+    //201 -> The request has been fulfilled and resulted in a new resource being created
+    res.status(201).json({
+        success:true,
+        product,
+    });
+});
 
 
 //Get All Products
-exports.getAllProducts = async(req,res) => {
+exports.getAllProducts = catchAsyncErrors(async(req,res) => {
 
     const products = await Product.find();
     res.status(200).json({
@@ -16,10 +23,10 @@ exports.getAllProducts = async(req,res) => {
         products
     })
 
-}
+});
 
 //Get Product details
-exports.getProductDetails = async(req,res,next)=>{
+exports.getProductDetails =catchAsyncErrors( async(req,res,next)=>{
     const product = await Product.findById(req.params.id);
 
     if(!product){
@@ -31,12 +38,12 @@ exports.getProductDetails = async(req,res,next)=>{
         product
     })
 
-}
+});
 
 
 //Update Product -- Admin 
 
-exports.updateProduct = async(req,res,next)=>{
+exports.updateProduct = catchAsyncErrors(async(req,res,next)=>{
     let product = await Product.findById(req.params.id);
     if(!product){
         return next(new ErrorHander("Product not found",404));
@@ -48,12 +55,12 @@ exports.updateProduct = async(req,res,next)=>{
         success:true,
         product
     })
-}
+});
 
 
 //Delete Product
 
-exports.deleteProduct = async(req,res,next)=>{
+exports.deleteProduct = catchAsyncErrors(async(req,res,next)=>{
     const product = await Product.findById(req.params.id);
 
     if(!product){
@@ -70,4 +77,4 @@ exports.deleteProduct = async(req,res,next)=>{
 
 
 
-}
+});
